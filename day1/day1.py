@@ -43,6 +43,18 @@ def numstring_to_digit(line):
                 break
     return line
 
+def dirty(line):
+    line = line.replace("one", "o1e")
+    line = line.replace("two", "t2o")
+    line = line.replace("three", "t3e")
+    line = line.replace("four", "f4r")
+    line = line.replace("five", "f5e")
+    line = line.replace("six", "s6x")
+    line = line.replace("seven", "s7n")
+    line = line.replace("eight", "e8t")
+    line = line.replace("nine", "n9e")
+    return line
+
 def main():
     input_file = open(INPUT, 'r')
     Lines = input_file.readlines()
@@ -50,7 +62,8 @@ def main():
     values = []
 
     for line in Lines:
-        line = numstring_to_digit(line.strip())
+        # line = numstring_to_digit(line.strip())
+        line = dirty(line.strip())
 
         newline = re.split('[a-zA-Z]', line.strip())
         newline = remove_item(newline, '')
