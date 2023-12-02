@@ -15,6 +15,14 @@ def is_possible(i, color):
     if (color == "blue" and i > BLUE): return False
     return True
 
+def power(pairs, color):
+    val = 0
+    for pair in pairs:
+        if pair[1] == color and int(pair[0]) >= val:
+            val = int(pair[0])
+    print (color + str(val))
+    return val
+
 def main():
     input_file = open(INPUT, 'r')
     Lines = input_file.readlines()
@@ -22,25 +30,31 @@ def main():
     values = []
 
     i = 0
-    for line in Lines:
+    powers = []
+    for game in Lines:
         i += 1
         qualified = 0
-        line = line.strip().split(': ')[1]
-        examples = line.split('; ')
+        pair_arr = []
+        game = game.strip().split(': ')[1]
+        examples = game.split('; ')
         for example in examples:
-            # print (example)
             pairs = example.split(", ")
-            # print (pairs)
             for pair in pairs:
-                # print (pair)
                 pair = pair.split(" ")
+                pair_arr.append(pair)
                 if not is_possible(int(pair[0]), pair[1]):
                     qualified = 1
-                    print(pair)
+                    # print(pair)
         if qualified == 0: values.append(i)
 
+        red     = power(pair_arr, "red")
+        green   = power(pair_arr, "green")
+        blue    = power(pair_arr, "blue")
+        game_power = red*green*blue
+        powers.append(game_power)
 
     print (sum(values))
+    print (sum(powers))
 
 
 
