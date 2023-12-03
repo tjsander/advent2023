@@ -62,6 +62,20 @@ def get_values(numbers, symbols):
             values.append(int(number[0]))
     return values
 
+def get_ratios(symbols, numbers):
+    ratios = []
+    for symbol in symbols:
+        if symbol[0] == "*":
+            gears = []
+            for number in numbers:
+                newsymbols = []
+                newsymbols.append(symbol)
+                if is_symbol_adjacent(number, newsymbols):
+                    gears.append(number[0])
+            if len(gears) == 2:
+                ratios.append(gears[0]*gears[1])
+    return ratios
+
 def main():
     input_file = open(INPUT, 'r')
     Lines = input_file.readlines()
@@ -75,8 +89,10 @@ def main():
     symbols = get_symbols(data)
 
     values = get_values(numbers, symbols)
-
     print (sum(values))
+
+    gear_ratios = get_ratios(symbols, numbers)
+    print (sum(gear_ratios))
 
 if __name__ == '__main__':
     main()
