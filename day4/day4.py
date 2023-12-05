@@ -15,21 +15,45 @@ def get_score(data):
         if number in winning_nos:
             print ("WINNER=" + number)
             score += 1
-    if score <= 1:
-        return score
-    else:
-        return (pow(2, score-1))
+    return score
 
+def game1(scores):
+    total = 0
+    for score in scores:
+        if score <= 1:
+            total += score
+        else:
+            total += pow(2, score-1)
+    return total
+
+def game2(scores, Lines):
+    total = 0
+    game = 0
+
+    mults = [1] * len(scores)
+
+    for score in scores:
+        for y in range (0,mults[game]):
+            for x in range (game+1,game+score+1):
+                if (x < len(scores)):
+                    mults[x] += 1
+                else:
+                    break
+        game += 1
+    return sum(mults)
 
 def main():
     input_file = open(INPUT, 'r')
     Lines = input_file.readlines()
-    score = []
+    scores = []
+    number = 0
 
     for game in Lines:
-        score.append(get_score(game.split(": ")[1]))
+        scores.append(get_score(game.split(": ")[1]))
+        number += 1
 
-    print(sum(score))
+    print(game1(scores))
+    print(game2(scores, Lines))
 
 if __name__ == '__main__':
     main()
