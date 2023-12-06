@@ -3,7 +3,9 @@ import re
 import math
 
 # INPUT = 'day6/test_input.txt'
-INPUT = 'day6/input.txt'
+# INPUT = 'day6/input.txt'
+# INPUT = 'day6/test_input_2.txt'
+INPUT = 'day6/input_2.txt'
 
 def part_1(time, distance):
     wins = 0
