@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import re
+import sys
 from operator import itemgetter
 
 # INPUT = 'day5/test_input.txt'
@@ -39,6 +40,31 @@ def parse_locations(seeds, maps):
         locations.append(location)
     return locations
 
+def location_to_seed(location, maps):
+    # seed = location
+    for seed_map in reversed(maps):
+        l1 = location
+        for line in seed_map:
+            if l1 in range(line[0],line[0]+line[2]):
+                # print (str(location) + " in " + str(line[0]) + ":" + str(line[2]))
+                location = location - line[0] + line[1]
+    return location
+
+def in_seed_ranges(seed, seed_ranges):
+    for seed_range in seed_ranges:
+        if (seed >= seed_range[0] and seed < seed_range[0] + seed_range[1]):
+            return True
+    return False
+
+def find_min_location(seeds, maps, seed_ranges):
+    seed_found = []
+    min_location = max(seeds)
+    for i in range (0, min_location):
+        new_seed = location_to_seed(i, maps)
+        if in_seed_ranges(new_seed, seed_ranges):
+            return i
+    return sys.maxsize
+
 def main():
     input_file = open(INPUT, 'r')
     Lines = input_file.readlines()
@@ -50,8 +76,19 @@ def main():
 
     maps = get_maps(Lines[2:])
     locations = parse_locations(seeds, maps)
-
     print (min(locations))
+
+    seed_ranges = []
+    for x in range (0, int(len(seeds)/2)):
+        seed_ranges.append([seeds[x*2], seeds[x*2+1]])
+    # seeds = parse_seed_range(seed_ranges, maps)
+    # locations = parse_locations_from_range(seed_ranges, maps)
+    # print (min(locations))
+
+    print (find_min_location(seeds, maps, seed_ranges))
+
+    # not 1016546293
+    # not 2290800715 too high
 
 if __name__ == '__main__':
     main()
