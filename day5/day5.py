@@ -34,7 +34,6 @@ def parse_locations(seeds, maps):
             for line in seed_map:
                 # print(line)
                 if seed in range(line[1],line[1]+line[2]):
-                    # print (str(seed) + " in " + str(line[1]) + ":" + str(line[2]))
                     location = seed - line[1] + line[0]
             seed = location
         locations.append(location)
@@ -46,7 +45,6 @@ def location_to_seed(location, maps):
         l1 = location
         for line in seed_map:
             if l1 in range(line[0],line[0]+line[2]):
-                # print (str(location) + " in " + str(line[0]) + ":" + str(line[2]))
                 location = location - line[0] + line[1]
     return location
 
@@ -81,14 +79,8 @@ def main():
     seed_ranges = []
     for x in range (0, int(len(seeds)/2)):
         seed_ranges.append([seeds[x*2], seeds[x*2+1]])
-    # seeds = parse_seed_range(seed_ranges, maps)
-    # locations = parse_locations_from_range(seed_ranges, maps)
-    # print (min(locations))
 
     print (find_min_location(seeds, maps, seed_ranges))
-
-    # not 1016546293
-    # not 2290800715 too high
 
 if __name__ == '__main__':
     main()
