@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 import re
+import numpy
 
+# INPUT = 'day8/test_input_2.txt'
 # INPUT = 'day8/test_input.txt'
 INPUT = 'day8/input.txt'
 
-def next_node():
-    return node
 
 def parse_nodes(lines):
     nodes = {}
@@ -18,8 +18,6 @@ def parse_nodes(lines):
 
     return nodes
 
-# def next_node(destination, nodes):
-#     return nodes[destination]
 
 def main():
     input_file = open(INPUT, 'r')
@@ -39,6 +37,19 @@ def main():
 
     print (i)
 
+    #part2
+    all_nodes = ["DPA", "QLA", "VJA", "GTA", "AAA", "XQA"]
+    loops = []
+
+    for current_node in all_nodes:
+        i = 0
+        # current_node = node
+        while (current_node[2] != "Z"):
+            current_node = nodes[current_node + instructions[i % len(instructions)]]
+            i += 1
+        loops.append(i)
+    print (loops)
+    print (numpy.lcm.reduce(loops))
 
 if __name__ == '__main__':
     main()
