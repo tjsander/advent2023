@@ -18,6 +18,14 @@ def get_next_sequence(new_history):
         sum += history[-1]
     return sum
 
+def get_first_sequence(new_history):
+    # values = []
+    value = 0
+    for i in reversed(range(0,len(new_history))):
+        value = (new_history[i][0] - value)
+        # values.append(new_history[i-1][0] - new_history[i][0])
+    return value
+
 def main():
     input_file = open(INPUT, 'r')
     Lines = input_file.readlines()
@@ -46,6 +54,11 @@ def main():
     i = 0
     for new_history in new_histories:
         i+=get_next_sequence(new_history)
+    print(i)
+
+    i = 0
+    for new_history in new_histories:
+        i+=get_first_sequence(new_history)
     print(i)
 
 
