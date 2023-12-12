@@ -3,6 +3,8 @@ import re
 
 INPUT = 'day10/test_input.txt'
 INPUT = 'day10/test_input_2.txt'
+INPUT = 'day10/test_input_3.txt'
+INPUT = 'day10/test_input_4.txt'
 INPUT = 'day10/input.txt'
 
 # 140x140 grid
@@ -34,7 +36,7 @@ def find_next(grid, current, previous):
     for direction in dirs:
         coords = direction[1]
         if (coords[0] != -1 and coords[0] < len(grid)):
-            if (coords[1] != -1 and coords[1] < len(grid)):
+            if (coords[1] != -1 and coords[1] < len(grid[0])):
                 if (previous != coords and coords != current):
                     if (is_connected(grid, direction[0], direction[1])):
                         next_dir = direction[1]
@@ -68,6 +70,76 @@ def find_start(grid):
             y+=1
         x+=1
 
+## PART 2... WHAT THE ACTUAL EFFFFFFFFF
+
+def char_big(character):
+    if character == "|": return [".x.",".x.",".x."]
+    if character == "-": return ["...","xxx","..."]
+    if character == "L": return [".x.",".xx","..."]
+    if character == "J": return [".x.","xx.","..."]
+    if character == "7": return ["...","xx.",".x."]
+    if character == "F": return ["...",".xx",".x."]
+    if character == ".": return ["...","...","..."]
+    if character == "S": return [".x.","xSx",".x."]
+
+def print_larger_grid(area_grid):
+    big_grid = []
+    for grid_y in area_grid:
+        for y in range(0,3):
+            big_grid_x = ""
+            for x in range (0,len(area_grid[0])):
+                big_grid_x += char_big(grid_y[x])[y]
+            big_grid.append(big_grid_x)
+    return big_grid
+
+def remove_edges(large_area_grid):
+    grid = []
+    for row in large_area_grid:
+        grid.append(list(row))
+
+    empty_spaces = [(0,0)]
+    empty_spaces = find_all_empty_spaces(empty_spaces, empty_spaces, large_area_grid)
+
+    for space in empty_spaces:
+        grid[space[0]][space[1]] = " "
+
+    grid = shrink_grid(grid)
+
+    return grid
+
+def shrink_grid(grid):
+    smol = []
+
+    for y in range(1, len(grid), 3):
+        y_str = ""
+        for x in range (1, len(grid[0]), 3):
+            y_str += grid[y][x]
+        smol.append(y_str)
+    return smol
+
+def get_surrounding_empties(space, grid):
+    empties = []
+    y, x = space
+
+    directions = [(y-1, x),(y+1, x),(y, x+1),(y, x-1)]
+
+    for direction in directions:
+        y,x = direction
+        if (y>-1 and x>-1 and x<len(grid[0]) and y<len(grid)):
+            if (grid[y][x] == "."): empties.append(direction)
+    return empties
+
+def find_all_empty_spaces(known_empties, new_spaces, large_area_grid):
+    spaces = []
+    for space in new_spaces:
+        spaces.extend(get_surrounding_empties(space, large_area_grid))
+    new_spaces = list(set(spaces) - set(known_empties))
+
+    if (len(new_spaces)!=0):
+        known_empties.extend(new_spaces)
+        find_all_empty_spaces(known_empties, new_spaces, large_area_grid)
+    return known_empties
+
 def main():
     input_file = open(INPUT, 'r')
     Lines = input_file.readlines()
@@ -94,6 +166,34 @@ def main():
     print (values)
     print (len(values)/2)
 
+    area_grid = []
+    for y in range(0,len(grid)):
+        grid_x = []
+        for x in range(0,len(grid[0])):
+            if ((y, x) in values):
+                grid_x.append(grid[y][x])
+            else:
+                grid_x.append(".")
+        area_grid.append(grid_x)
+
+    for grid_l in area_grid:
+        str = ""
+        print (str.join(grid_l))
+
+    large_area_grid = print_larger_grid(area_grid)
+
+    for grid_l in large_area_grid:
+        # str = ""
+        # print (str.join(grid_l))
+        print (grid_l)
+
+    final_grid = remove_edges(large_area_grid)
+
+    count = 0
+    for row in final_grid:
+        count += row.count('.')
+
+    print(count)
 
 if __name__ == '__main__':
     main()
