@@ -2,13 +2,13 @@
 import re
 
 INPUT = 'day13/test_input.txt'
-# INPUT = 'day13/input.txt'
+INPUT = 'day13/input.txt'
 
 def get_reflections(puzzles):
     reflections = []
     for puzzle in puzzles:
-        reflections.append(find_horizontal(puzzle))
         reflections.append(100* find_vertical(puzzle))
+        reflections.append(find_horizontal(puzzle))
     return reflections
 
 def find_horizontal(puzzle):
@@ -24,12 +24,16 @@ def find_horizontal(puzzle):
 
 def find_vertical(puzzle):
     for i in range (1, len(puzzle)):
+        retval = 0
         if (puzzle[i-1] == puzzle[i]):
             for j in range (1, i+1):
-                if (i+j > len(puzzle)):
-                    return j
-            return 0
-    return 0
+                if (i+j > len(puzzle)-1 or i-j-1 < 0):
+                    return i
+                else:
+                    if (puzzle[i+j] != puzzle[i-j-1]):
+                        break
+            # return i
+    return retval
 
 def main():
     input_file = open(INPUT, 'r')
