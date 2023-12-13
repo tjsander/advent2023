@@ -3,9 +3,9 @@ import re
 
 INPUT = 'day12/test_input.txt'
 # INPUT = 'day12/test_input_2.txt'
-INPUT = 'day12/input.txt'
-DEBUG = False
-PART1 = True
+# INPUT = 'day12/input.txt'
+DEBUG = True
+PART1 = False
 
 def get_arrangements(springs):
     values = []
@@ -85,8 +85,7 @@ def main():
             counts = [int(x) for x in counts]
             springs.append([input_parsed[0].strip(), counts])
         values = get_arrangements(springs)
-
-    if not PART1:
+    else:
         springs = []
         for line in Lines:
             count_arr = []
@@ -96,10 +95,11 @@ def main():
             counts = input_parsed[1].split(",")
             counts = [int(x) for x in counts]
 
-            input_str = instr
-            for i in range (0,1):
+            input_str = ""
+            # count_arr = counts
+            for i in range (0,5):
                 count_arr.extend(counts)
-                input_str += "?"
+                if i != 0: input_str += "?"
                 input_str += instr
             springs.append([input_str, count_arr])
         values = get_arrangements(springs)
