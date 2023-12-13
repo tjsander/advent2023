@@ -49,6 +49,10 @@ def not_already_broken(spring, count):
     for i in range (0, len(new_count)):
         if (new_count[i] > count[i]):
             return False
+    if (len(new_spr) == len(spring)):
+        for i in range (0, len(new_count)):
+            if (new_count[i] != count[i]):
+                return False
     return True
 
 def get_broken_count(spring):
@@ -93,7 +97,7 @@ def main():
             counts = [int(x) for x in counts]
 
             input_str = instr
-            for i in range (0,4):
+            for i in range (0,1):
                 count_arr.extend(counts)
                 input_str += "?"
                 input_str += instr
