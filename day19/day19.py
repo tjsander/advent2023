@@ -49,11 +49,53 @@ def parse_eval(part, flow):
     else:
         return (part[split_f[0]] > int(split_f[1]))
 
+def process_ranges(range_set, work_id, workflows):
+    list_ranges = []
+    flows = workflows[work_id]
+    for flow in flows:
+        if (flow.find(":") != -1):
+            # Return two range sets if(
+            pass_range, fail_range = parse_eval_range(range_set, flow)
+            result = flow.split(":")[1]
+            if result == "A":
+                list_ranges.extend(pass_range)
+                return list_ranges
+            if result == "R":
+                return list_ranges
+            list_ranges.extend(process_ranges(fail_range, result, workflows))
+            return list_ranges
+        else:
+            if flow == "A":
+                list_ranges.extend(range_set)
+                return list_ranges
+            if flow == "R":
+                return list_ranges
+            list_ranges.extend(process_ranges(range_set, flow, workflows))
+            return list_ranges
+    return list_ranges
 
-def process_ranges(ranges, workflows):
-    compiled_ranges = []
-    # compiled_ranges.extend()
-    return compiled_ranges
+def parse_eval_range(range_eval, flow):
+    split_f =""
+    less_than = False
+    if flow.find("<") != -1:
+        split_f = flow.split(":")[0].split("<")
+        less_than = True
+    else:
+         split_f = flow.split(":")[0].split(">")
+
+    comparison_int = int(split_f[1])
+
+    top_range    = range_eval.copy()
+    top_range[split_f[0]] = top_range[split_f[0]][:comparison_int]
+
+    bottom_range = range_eval.copy()
+    bottom_range[split_f[0]] = bottom_range[split_f[0]][comparison_int:]
+
+    if (less_than):
+        return (top_range, bottom_range)
+    else:
+        return (bottom_range, top_range)
+
 
 def main():
     input_file = open(INPUT, 'r')
@@ -86,9 +128,13 @@ def main():
     print (values)
     print (sum(custom_sum(values)))
 
-    ranges = {"x":[0,4000],"m":[0,4000],"a":[0,4000],"s":[0,4000]}
+    ranges = {"x":range(0,4000),"m":range(0,4000),"a":range(0,4000),"s":range(0,4000)}
     range_results = []
-    range_results = process_ranges(ranges, workflows)
+    # range_1 = ranges["x"][2000:]
+    # range_2 = ranges["x"][:2000]
+    # ranges["x"] = range_2
+    # range_2 = range_2[:50]
+    range_results = process_ranges(ranges,"in", workflows)
     print (range_results)
 
 
