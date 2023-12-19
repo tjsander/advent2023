@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 import re
+import time
 
 INPUT = 'day16/test_input.txt'
-# INPUT = 'day16/input.txt'
+INPUT = 'day16/input.txt'
 
 def generate_grid(Lines):
     grid = []
@@ -23,29 +24,24 @@ def ray_traverse_grid(grid, y, x, direction, reflected_values):
         if current_location != ".":
             if (current_location == "/" or current_location == "\\"):
                 direction = new_direction(current_location, direction)
-            elif str_value not in reflected_values:
-                if (current_location == "|" and (direction == "left" or direction == "right")):
+            if (current_location == "|" and (direction == "left" or direction == "right")):
+                if str_value not in reflected_values:
                     reflected_values.add(str_value)
                     if (y-1>-1):
                         values.update(ray_traverse_grid(grid,y-1,x,"up",reflected_values))
                     if (y+1<max_y):
                         values.update(ray_traverse_grid(grid,y+1,x,"down",reflected_values))
-                    return values
-                if (current_location == "-" and (direction == "up" or direction == "down")):
+                return values
+            elif (current_location == "-" and (direction == "up" or direction == "down")):
+                if str_value not in reflected_values:
                     reflected_values.add(str_value)
                     if (x-1 >=0):
                         values.update(ray_traverse_grid(grid,y,x-1,"left",reflected_values))
                     if (x+1 <max_x):
                         values.update(ray_traverse_grid(grid,y,x+1,"right",reflected_values))
-                    return values
-            else:
-                print("what the what")
+                return values
 
         y,x = move_direction(grid,y,x,direction)
-    for value in reflected_values:
-        if value not in values:
-            print("ERROR")
-            values.add(value)
     return values
 
 def new_direction(char_location, direction):
@@ -110,7 +106,13 @@ def main():
         print(line.strip())
 
     grid = generate_grid(Lines)
-    values = ray_traverse_grid(grid,0,0,"right",set({}))
+
+    reflected_values = set({})
+    values = ray_traverse_grid(grid,0,0,"right",reflected_values)
+
+    for value in reflected_values:
+        if value not in values:
+            print ("WHAT THE WHAT")
 
     print_grid(len(grid), len(grid[0]),values)
     print(len(values))
