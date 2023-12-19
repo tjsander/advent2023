@@ -2,7 +2,7 @@
 import re
 import time
 
-INPUT = 'day16/test_input.txt'
+# INPUT = 'day16/test_input.txt'
 INPUT = 'day16/input.txt'
 
 def generate_grid(Lines):
@@ -109,14 +109,31 @@ def main():
 
     reflected_values = set({})
     values = ray_traverse_grid(grid,0,0,"right",reflected_values)
-
-    for value in reflected_values:
-        if value not in values:
-            print ("WHAT THE WHAT")
-
-    print_grid(len(grid), len(grid[0]),values)
     print(len(values))
-    # 10654 too high
+
+    max_energized = 0
+
+    for y in range(len(grid)):
+        reflected_values = set({})
+        energized = len(ray_traverse_grid(grid,y,0,"right",reflected_values))
+        if energized > max_energized:
+            max_energized = energized
+        reflected_values = set({})
+        energized = len(ray_traverse_grid(grid,y,len(grid[0])-1,"left",reflected_values))
+        if energized > max_energized:
+            max_energized = energized
+    for x in range(len(grid[0])):
+        reflected_values = set({})
+        energized = len(ray_traverse_grid(grid,0,x,"down",reflected_values))
+        if energized > max_energized:
+            max_energized = energized
+        reflected_values = set({})
+        energized = len(ray_traverse_grid(grid,len(grid)-1,x,"up",reflected_values))
+        if energized > max_energized:
+            max_energized = energized
+
+    print(max_energized)
+
 
 if __name__ == '__main__':
     main()
