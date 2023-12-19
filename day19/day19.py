@@ -2,7 +2,7 @@
 import re
 
 INPUT = 'day19/test_input.txt'
-INPUT = 'day19/input.txt'
+# INPUT = 'day19/input.txt'
 
 def custom_sum(parts):
     values = []
@@ -58,12 +58,13 @@ def process_ranges(range_set, work_id, workflows):
             pass_range, fail_range = parse_eval_range(range_set, flow)
             result = flow.split(":")[1]
             if result == "A":
-                list_ranges.extend(pass_range)
+                list_ranges.extend([pass_range])
                 return list_ranges
             if result == "R":
                 return list_ranges
-            list_ranges.extend(process_ranges(fail_range, result, workflows))
-            return list_ranges
+            if (len(pass_range) > 0):
+                list_ranges.extend(process_ranges(pass_range, result, workflows))
+                return list_ranges
         else:
             if flow == "A":
                 list_ranges.extend(range_set)
@@ -90,6 +91,11 @@ def parse_eval_range(range_eval, flow):
 
     bottom_range = range_eval.copy()
     bottom_range[split_f[0]] = bottom_range[split_f[0]][comparison_int:]
+
+    if len(bottom_range[split_f[0]]) == 0:
+        bottom_range = []
+    if len(top_range[split_f[0]]) == 0:
+        top_range = []
 
     if (less_than):
         return (top_range, bottom_range)
@@ -136,6 +142,14 @@ def main():
     # range_2 = range_2[:50]
     range_results = process_ranges(ranges,"in", workflows)
     print (range_results)
+
+    range_totals = []
+    for result in range_results:
+        range_total = 1
+        for key, value in result.items():
+            range_total = range_total * len(value)
+        range_totals.append(range_total)
+    print(sum(range_totals))
 
 
 if __name__ == '__main__':
