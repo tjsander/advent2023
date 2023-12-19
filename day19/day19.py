@@ -125,6 +125,47 @@ def get_overlapping_range_total(ranges_a, ranges_b):
         totals.append(total)
     return numpy.prod(totals)
 
+def get_unique_overlapping_range_totals(range_sets):
+    full_sets = []
+    keys = ["x","m","a","s"]
+
+    totals = []
+    new_range_sets = []
+
+    for i in range(0,len(range_sets)):
+
+        range_set_copy = range_sets[i].copy()
+
+        for j in range(i+1,len(range_sets)):
+            overlaps = []
+
+            for key in keys:
+                overlaps.append(len(set(range_sets[i][key]) & set(range_sets[j][key])))
+            product = numpy.prod(overlaps)
+            # totals.append(product)
+            if (product > 0):
+                amended = False
+                for key in keys:
+                    # If overlaps actually exist
+                    # if (len(set(range_set_copy[key]) - set(range_sets[j][key]))>0):
+                    range_set_copy[key] = set(range_set_copy[key]) - set(range_sets[j][key])
+                        # amended = True
+                # if not (amended):
+                #     for key in keys:
+                #         range_set_copy[key] = set(range_set_copy[key]) - set(range_sets[j][key])
+                        # range_set_copy[key] = {}
+        new_range_sets.append(range_set_copy)
+
+    range_totals = []
+    for result in new_range_sets:
+        range_total = 1
+        for key, value in result.items():
+            range_total = range_total * len(value)
+        range_totals.append(range_total)
+
+    print(sum(range_totals))
+    return new_range_sets
+
 def main():
     input_file = open(INPUT, 'r')
     Lines = input_file.readlines()
@@ -171,28 +212,7 @@ def main():
     #NEED TO FIND A WAY TO REMOVE DUPES....
     print(sum(range_totals))
 
-    dupe_totals = []
-    for i in range(0,len(range_results)):
-        for j in range(i+1,len(range_results)):
-            total = get_overlapping_range_total(range_results[i],range_results[j])
-            dupe_totals.append(total)
-            # print("I={} J={}".format(i,j))
-    print(sum(dupe_totals))
-
-    print(sum(range_totals) - sum(dupe_totals))
-
-    # total = 0
-    # for x in range (0,4000):
-    #     print("ex")
-    #     for m in range (0,4000):
-    #         print("em")
-    #         for a in range (0,4000):
-    #             for s in range (0,4000):
-    #                 for result in range_results:
-    #                     if (x in result["x"] and m in result["m"] and a in result["a"] and s in result["s"]):
-    #                         total +=1
-    # print(total)
-
+    dupe_totals = get_unique_overlapping_range_totals(range_results)
 
 
 if __name__ == '__main__':
