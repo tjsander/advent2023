@@ -2,7 +2,7 @@
 import re
 
 INPUT = 'day22/test_input.txt'
-# INPUT = 'day22/input.txt'
+INPUT = 'day22/input.txt'
 DEBUG = False
 
 class Brick():
@@ -64,7 +64,7 @@ def brick_rests_on_brick(Brick, Brick_comp):
             if x in Brick_comp.x_range:
                 for y in Brick.y_range:
                     if y in Brick_comp.y_range:
-                        print (str(Brick) + " rests on " + str(Brick_comp))
+                        if DEBUG: print (str(Brick) + " rests on " + str(Brick_comp))
                         return True
     return False
 
@@ -80,13 +80,15 @@ def drop_brick(brick1, Bricks):
         for brick2 in Bricks:
             if (brick1 != brick2) and brick_rests_on_brick(brick1, brick2):
                 return True
-        print(str(brick1) + " dropping1")
+        if DEBUG: print(str(brick1) + " dropping1")
         brick1.drop()
     return True
 
 def can_drop_brick(brick1, Bricks):
     for brick2 in Bricks:
         if (brick1 != brick2):
+            if brick1.z_floor == 1:
+                return False
             if brick_rests_on_brick(brick1, brick2):
                 return False
         # return False
