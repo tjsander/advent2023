@@ -77,6 +77,7 @@ def drop_all_bricks(Bricks):
 def drop_brick(brick1, Bricks):
     stopped = False
     while not stopped:
+        if brick1.z_floor <= 1: return True
         for brick2 in Bricks:
             if (brick1 != brick2) and brick_rests_on_brick(brick1, brick2):
                 return True
@@ -127,16 +128,18 @@ def main():
 
     # bricks.append(Brick("0,0,0~9,9,0"))
 
-    print (bricks)
-    for brick in bricks:
-        print (brick)
+    # print (bricks)
+    # for brick in bricks:
+    #     print (brick)
     new_list = sorted(bricks, key=lambda x: x.z_floor)
-
+    print("sorted")
     new_list = drop_all_bricks(new_list)
-    for brick in new_list:
-        print (brick)
+    print("dropped")
+    # for brick in new_list:
+    #     print (brick)
 
     breakable_bricks = break_bricks(new_list)
+    print("broken")
     print (len(breakable_bricks))
 
 
