@@ -2,7 +2,7 @@
 import re
 
 INPUT = 'day23/test_input.txt'
-INPUT = 'day23/input.txt'
+# INPUT = 'day23/input.txt'
 
 # Longest path problem
 
@@ -15,7 +15,8 @@ def traverse(Grid, positions):
 
     position = start
     while position != end:
-        next_step_set = next_steps(Grid, position)
+        # next_step_set = next_steps(Grid, position)
+        next_step_set = next_steps_pt2(Grid,position)
         branch = 0
         new_path = current_traversal.copy()
         for step in next_step_set:
@@ -29,7 +30,8 @@ def traverse(Grid, positions):
                 else:
                     position = step
                     current_traversal.append(step)
-
+        if branch == 0:
+            return positions
                     # traverse(Grid, positions)
     # return positions
 
@@ -70,6 +72,32 @@ def next_steps(grid, step):
             possible_steps.append(step)
     return possible_steps
 
+def next_steps_pt2(grid, step):
+    possible_steps = []
+    y = step[0]
+    x = step[1]
+    if (y+1 < len(grid)):
+        step = (y+1,x)
+        space = grid[step[0]][step[1]]
+        if space != "#":
+            possible_steps.append(step)
+    if (y-1 >= 0):
+        step = (y-1,x)
+        space = grid[step[0]][step[1]]
+        if space != "#":
+            possible_steps.append(step)
+    if (x+1 < len(grid[0])):
+        step = (y,x+1)
+        space = grid[step[0]][step[1]]
+        if space != "#":
+            possible_steps.append(step)
+    if (x-1 >= 0):
+        step = (y,x-1)
+        space = grid[step[0]][step[1]]
+        if space != "#":
+            possible_steps.append(step)
+    return possible_steps
+
 def main():
     input_file = open(INPUT, 'r')
     Lines = input_file.readlines()
@@ -85,8 +113,10 @@ def main():
 
     lengths = []
     for path in positions:
-        lengths.append(len(path))
-        # print (print_grid(grid,path))
+        if path[-1] == (len(grid)-1, len(grid[0])-2):
+            lengths.append(len(path))
+        if (len(path) == 174):
+            print (print_grid(grid,path))
 
     print (max(lengths)-1)
 
