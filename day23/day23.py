@@ -2,7 +2,7 @@
 import re
 
 INPUT = 'day23/test_input.txt'
-# INPUT = 'day23/input.txt'
+INPUT = 'day23/input.txt'
 
 # Longest path problem
 
@@ -14,7 +14,7 @@ def traverse(Grid, positions):
     end = (len(Grid)-1 , len(Grid[0])-2)
 
     position = start
-    if position != end:
+    while position != end:
         next_step_set = next_steps(Grid, position)
         branch = 0
         new_path = current_traversal.copy()
@@ -27,9 +27,10 @@ def traverse(Grid, positions):
                     positions.append(new_path)
                     traverse(Grid,positions)
                 else:
-                    # position = step
+                    position = step
                     current_traversal.append(step)
-                    traverse(Grid, positions)
+
+                    # traverse(Grid, positions)
     # return positions
 
 def print_grid(grid, steps):
@@ -85,7 +86,7 @@ def main():
     lengths = []
     for path in positions:
         lengths.append(len(path))
-        print (print_grid(grid,path))
+        # print (print_grid(grid,path))
 
     print (max(lengths)-1)
 
